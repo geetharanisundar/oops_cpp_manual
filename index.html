@@ -1,0 +1,2150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>C++ & OOPs Laboratory Portal</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --accent: #38bdf8;
+      --green: #10b981;
+      --green-hover: #059669;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --code-bg: #090d16;
+      --tag-bg: #1e3a5f;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+    .mobile-nav-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: #111827;
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .menu-toggle-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    aside {
+      width: 340px;
+      min-width: 320px;
+      background: #111827;
+      border-right: 1px solid var(--card-border);
+      display: flex;
+      flex-direction: column;
+      z-index: 30;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .brand {
+      padding: 1.25rem;
+      border-bottom: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand h1 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .close-drawer-btn {
+      display: none;
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+      padding: 4px;
+    }
+    .search-box {
+      padding: 0.75rem 1rem 0.5rem;
+    }
+    .search-box input {
+      width: 100%;
+      padding: 0.65rem 0.85rem;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: var(--text);
+      outline: none;
+      font-size: 0.88rem;
+    }
+    .search-box input:focus { border-color: var(--accent); }
+    .filters {
+      display: flex;
+      gap: 6px;
+      padding: 0.5rem 1rem 0.75rem;
+      border-bottom: 1px solid var(--card-border);
+      overflow-x: auto;
+      white-space: nowrap;
+      scrollbar-width: none;
+    }
+    .filters::-webkit-scrollbar { display: none; }
+    .filter-chip {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      padding: 4px 10px;
+      border-radius: 12px;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .filter-chip.active {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 600;
+      border-color: var(--accent);
+    }
+    .lab-list {
+      list-style: none;
+      overflow-y: auto;
+      flex: 1;
+      padding: 0.5rem 0;
+    }
+    .lab-item {
+      padding: 0.85rem 1rem;
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .lab-item:hover, .lab-item.active {
+      background: #1e293b;
+      border-left-color: var(--accent);
+    }
+    .lab-item-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .lab-num {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+    .lab-badge {
+      font-size: 0.68rem;
+      background: var(--tag-bg);
+      color: #7dd3fc;
+      padding: 2px 6px;
+      border-radius: 4px;
+    }
+    .lab-item-title {
+      font-size: 0.85rem;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .content-wrapper {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+    .content-header {
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.75rem;
+    }
+    .content-header .ex-id {
+      font-size: 0.8rem;
+      color: var(--accent);
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .content-header h2 {
+      font-size: 1.35rem;
+      margin: 0.25rem 0;
+    }
+    .section-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1rem;
+    }
+    .card-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .algorithm-steps {
+      list-style-position: inside;
+      line-height: 1.7;
+      color: #cbd5e1;
+      font-size: 0.88rem;
+    }
+    .simulator-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    .editor-pane, .terminal-pane {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      min-height: 380px;
+      height: 440px;
+    }
+    .pane-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0.75rem;
+      background: #131d2e;
+      border-bottom: 1px solid var(--card-border);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .pane-header .actions { display: flex; gap: 6px; }
+    .btn {
+      padding: 5px 9px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-secondary {
+      background: var(--card-border);
+      color: var(--text);
+    }
+    .btn-secondary:hover { background: #475569; }
+    .btn-run {
+      background: var(--green);
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .btn-run:hover { background: var(--green-hover); }
+    .btn-run:disabled { background: #475569; cursor: not-allowed; }
+    #editorArea {
+      flex: 1;
+      background: transparent;
+      color: #e2e8f0;
+      border: none;
+      outline: none;
+      padding: 0.75rem;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      resize: none;
+      white-space: pre;
+    }
+    .terminal-output {
+      flex: 1;
+      padding: 0.75rem;
+      color: #10b981;
+      background: #06090f;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+      font-size: 0.8rem;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      line-height: 1.45;
+    }
+    .stdin-container {
+      border-top: 1px solid var(--card-border);
+      padding: 0.5rem 0.75rem;
+      background: #111827;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .stdin-container label {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .stdin-container input {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-size: 0.78rem;
+      border-radius: 4px;
+      padding: 5px 8px;
+      outline: none;
+    }
+    .result-box {
+      border-left: 4px solid var(--green);
+      background: rgba(16, 185, 129, 0.08);
+      padding: 0.75rem 1rem;
+      border-radius: 0 8px 8px 0;
+      color: #cbd5e1;
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    #sandboxFrame {
+      width: 100%;
+      height: 480px;
+      border: none;
+      border-radius: 8px;
+      display: none;
+    }
+    .drawer-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 25;
+      backdrop-filter: blur(2px);
+    }
+    @media (max-width: 900px) {
+      .mobile-nav-bar { display: flex; }
+      .close-drawer-btn { display: block; }
+      aside {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 82%;
+        max-width: 320px;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 16px rgba(0, 0, 0, 0.5);
+      }
+      aside.open { transform: translateX(0); }
+      .drawer-overlay.active { display: block; }
+      main { padding: 1rem; gap: 1rem; }
+      .simulator-container { grid-template-columns: 1fr; }
+      .editor-pane, .terminal-pane { height: 340px; }
+      #sandboxFrame { height: 400px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+
+  <aside id="sidebarDrawer">
+    <div class="brand">
+      <div>
+        <h1>C++ & OOPs Lab</h1>
+        <small style="color: var(--text-muted); font-size: 0.72rem;">Manual & Simulator</small>
+      </div>
+      <button class="close-drawer-btn" id="closeDrawerBtn" aria-label="Close Menu">✕</button>
+    </div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Search exercises..." />
+    </div>
+    <div class="filters" id="categoryChips">
+      <span class="filter-chip active" data-cat="all">All</span>
+      <span class="filter-chip" data-cat="Basics">Basics</span>
+      <span class="filter-chip" data-cat="Conditionals & Loops">Control Flow</span>
+      <span class="filter-chip" data-cat="OOP & Functions">OOP Concepts</span>
+      <span class="filter-chip" data-cat="Inheritance">Inheritance</span>
+      <span class="filter-chip" data-cat="Advanced">Templates & Files</span>
+    </div>
+    <ul class="lab-list" id="labList"></ul>
+  </aside>
+
+  <div class="content-wrapper">
+    <div class="mobile-nav-bar">
+      <button class="menu-toggle-btn" id="openDrawerBtn">
+        <span>☰</span> <span>All Labs</span>
+      </button>
+      <span id="mobileExBadge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Ex: 1</span>
+    </div>
+
+    <main id="contentArea">
+      <div class="content-header">
+        <span class="ex-id" id="detailExId">Ex :No:1</span>
+        <h2 id="detailTitle">Illustration program for C++ Operators</h2>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">🎯 Aim</div>
+        <p id="detailAim" style="line-height: 1.5; color: #cbd5e1; font-size: 0.88rem; margin-top: 0.35rem;"></p>
+      </div>
+
+      <div class="section-card">
+        <div class="card-header-bar">
+          <div class="section-title" style="margin: 0;">⚡ Multi-Engine C++ Simulator</div>
+          <button class="btn btn-secondary" id="toggleSandboxBtn">Switch to Sandbox View</button>
+        </div>
+        
+        <div class="simulator-container" id="apiSimulator">
+          <div class="editor-pane">
+            <div class="pane-header">
+              <span>Source Code (main.cpp)</span>
+              <div class="actions">
+                <button class="btn btn-secondary" id="resetCodeBtn">Reset</button>
+                <button class="btn btn-secondary" id="copyCodeBtn">Copy</button>
+                <button class="btn btn-run" id="runCodeBtn">▶ Run</button>
+              </div>
+            </div>
+            <textarea id="editorArea" spellcheck="false"></textarea>
+          </div>
+
+          <div class="terminal-pane">
+            <div class="pane-header">
+              <span>Output Terminal</span>
+              <span id="execStatus" style="font-weight: normal; font-size: 0.72rem;">GCC 9.2</span>
+            </div>
+            <div class="terminal-output" id="terminalOutput">Click "▶ Run" to execute code...</div>
+            <div class="stdin-container">
+              <label for="stdinInput">Interactive Input (STDIN / cin)</label>
+              <input type="text" id="stdinInput" placeholder="Space-separated inputs (e.g. 10 20)" />
+            </div>
+          </div>
+        </div>
+
+        <iframe id="sandboxFrame" loading="lazy" src="https://onecompiler.com/embed/cpp?listenToEvents=true&hideNew=true&hideTitle=true"></iframe>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">📋 Algorithm</div>
+        <ol class="algorithm-steps" id="detailAlgorithm"></ol>
+      </div>
+
+      <div class="section-card">
+        <div class="section-title">✅ Result</div>
+        <div class="result-box" id="detailResult"></div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const exercises = [
+      {
+        id: "Ex :No:1",
+        category: "Basics",
+        title: "Illustration program for C++ Operators",
+        defaultStdin: "10 5",
+        aim: "To write a C++ program to illustrate the operations of different types of operators such as arithmetic, relational, logical, assignment, increment/decrement, and conditional (ternary) operators.",
+        algorithm: [
+          "Start the program.",
+          "Declare two integer variables a and b.",
+          "Read the values of a and b from the user.",
+          "Perform arithmetic operations (+, -, *, /, %).",
+          "Perform relational operations (==, !=, >, <, >=, <=).",
+          "Perform logical operations (&&, ||, !).",
+          "Perform assignment operation (+=).",
+          "Demonstrate increment (++) and decrement (--) operators.",
+          "Use the conditional (ternary) operator to find the larger number.",
+          "Display all the results.",
+          "Stop the program"
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int a, b;
+    cout << "Enter two integers: ";
+    cin >> a >> b;
+    // Arithmetic Operators
+    cout << "\\nArithmetic Operators\\n";
+    cout << "a + b = " << a + b << endl;
+    cout << "a - b = " << a - b << endl;
+    cout << "a * b = " << a * b << endl;
+    cout << "a / b = " << a / b << endl;
+    cout << "a % b = " << a % b << endl;
+    // Relational Operators
+    cout << "\\nRelational Operators\\n";
+    cout << "a == b : " << (a == b) << endl;
+    cout << "a != b : " << (a != b) << endl;
+    cout << "a > b  : " << (a > b) << endl;
+    cout << "a < b  : " << (a < b) << endl;
+    cout << "a >= b : " << (a >= b) << endl;
+    cout << "a <= b : " << (a <= b) << endl;
+    // Logical Operators
+    cout << "\\nLogical Operators\\n";
+    cout << "(a > 0 && b > 0) : " << (a > 0 && b > 0) << endl;
+    cout << "(a > 0 || b > 0) : " << (a > 0 || b > 0) << endl;
+    cout << "!(a > b) : " << !(a > b) << endl;
+    // Assignment Operator
+    int c = a;
+    c += b;
+    cout << "\\nAssignment Operator\\n";
+    cout << "After c += b, c = " << c << endl;
+    // Increment and Decrement Operators
+    cout << "\\nIncrement and Decrement Operators\\n";
+    cout << "++a = " << ++a << endl;
+    cout << "--b = " << --b << endl;
+    // Conditional (Ternary) Operator
+    int max = (a > b) ? a : b;
+    cout << "\\nConditional Operator\\n";
+    cout<<"A value"<<a<<endl;
+    cout<<"B Value"<<b<<endl;
+    cout << "Largest number = " << max << endl;
+    return 0;
+}`,
+        result: "Thus, the C++ program to illustrate the operations of arithmetic, relational, logical, assignment, increment/decrement, and conditional operators was successfully executed, and the results were verified."
+      },
+      {
+        id: "Ex :No:2a",
+        category: "Basics",
+        title: "Implicit Type Conversion",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate implicit type conversion, where the compiler automatically converts one data type into another.",
+        algorithm: [
+          "Start the program.",
+          "Declare a float variable num.",
+          "Declare an int variable result.",
+          "Assign the float value to the int variable.",
+          "The compiler automatically converts the integer into a float.",
+          "Display the integer and float values.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+     float num = 25.5;
+    int result;
+    // Implicit Type Conversion
+    result = num;
+    cout << "Integer value = " << num << endl;
+    cout << "Float value = " << result << endl;
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate implicit type conversion was executed successfully."
+      },
+      {
+        id: "Ex :No:2b",
+        category: "Basics",
+        title: "Explicit Type Conversion Program",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate explicit type conversion using type casting.",
+        algorithm: [
+          "Start the program.",
+          "Declare a float variable num.",
+          "Declare an integer variable result.",
+          "Assign a floating-point value to num.",
+          "Convert the float value into an integer using (int) type casting.",
+          "Display the float and integer values.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    float num = 12.75;
+    int result;
+    // Explicit Type Conversion
+    result = (int)num;
+    cout << "Float value = " << num << endl;
+    cout << "Integer value = " << result << endl;
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate explicit type conversion using type casting was executed successfully."
+      },
+      {
+        id: "Ex :No:3a",
+        category: "Conditionals & Loops",
+        title: "DECISION MAKING STATEMENTS - Total, Average, Grade, and Result Using Nested if...else",
+        defaultStdin: "85 90 75 80 65",
+        aim: "To write a C++ program to read five subject marks from the user, calculate the total and average, and determine the grade and result using nested if...else statements.",
+        algorithm: [
+          "Start.",
+          "Declare five integer variables m1, m2, m3, m4, and m5.",
+          "Declare variables total (integer) and average (float).",
+          "Read the marks of the five subjects.",
+          "Calculate the total marks.",
+          "Calculate the average marks.",
+          "Check whether all subject marks are greater than or equal to 50.",
+          "If all subjects are passed: If average is 90 or above, display Grade A. Else if average is 80 or above, display Grade B. Else if average is 70 or above, display Grade C. Else if average is 60 or above, display Grade D. Else display Grade E. Display Result: Pass.",
+          "Otherwise, display Result: Fail.",
+          "Display the total and average.",
+          "Stop."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int m1, m2, m3, m4, m5, total;
+    float average;
+    cout << "Enter marks of five subjects: ";
+    cin >> m1 >> m2 >> m3 >> m4 >> m5;
+    total = m1 + m2 + m3 + m4 + m5;
+    average = total / 5.0;
+    cout << "\\nTotal = " << total;
+    cout << "\\nAverage = " << average << endl;
+    if (m1 >= 50 && m2 >= 50 && m3 >= 50 && m4 >= 50 && m5 >= 50)
+    {
+        if (average >= 90)
+        {
+            cout << "Grade A";
+        }
+        else
+        {
+            if (average >= 80)
+            {
+                cout << "Grade B";
+            }
+            else
+            {
+                if (average >= 70)
+                {
+                    cout << "Grade C";
+                }
+                else
+                {
+                    if (average >= 60)
+                    {
+                        cout << "Grade D";
+                    }
+                    else
+                    {
+                        cout << "Grade E";
+                    }
+                }
+            }
+        }
+        cout << "\\nResult : Pass";
+    }
+    else
+    {
+        cout << "Result : Fail";
+    }
+    return 0;
+}`,
+        result: "Thus, the C++ program to read five subject marks, calculate the total and average, and determine the grade and result using nested if...else statements was written, executed, and the desired output was obtained successfully."
+      },
+      {
+        id: "Ex :No:3b",
+        category: "Conditionals & Loops",
+        title: "DECISION MAKING STATEMENTS - Bank Transaction Using Menu-Driven Program in C++",
+        defaultStdin: "1 5000",
+        aim: "To write a C++ menu-driven program to perform basic bank transactions such as Deposit, Withdraw, Balance Enquiry, and Exit using the switch statement.",
+        algorithm: [
+          "Start.",
+          "Initialize the account balance with an initial amount (e.g., ₹10,000).",
+          "Display the menu: Deposit, Withdraw, Balance Enquiry, Exit.",
+          "Read the user's choice.",
+          "Use the switch statement to perform the selected operation: Deposit (add to balance), Withdraw (subtract if available, else show Insufficient Balance), Balance Enquiry (display balance), Exit (display thank you message). Default: display Invalid Choice.",
+          "Stop."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int choice;
+    float balance = 10000, amount;
+    cout << "******** BANK MENU ********" << endl;
+    cout << "1. Deposit" << endl;
+    cout << "2. Withdraw" << endl;
+    cout << "3. Balance Enquiry" << endl;
+    cout << "4. Exit" << endl;
+    cout << "\\nEnter your choice: ";
+    cin >> choice;
+    switch(choice)
+    {
+        case 1:
+            cout << "Enter amount to deposit: ";
+            cin >> amount;
+            balance = balance + amount;
+            cout << "Amount Deposited Successfully." << endl;
+            cout << "Current Balance = Rs. " << balance;
+            break;
+        case 2:
+            cout << "Enter amount to withdraw: ";
+            cin >> amount;
+            if(amount <= balance)
+            {
+                balance = balance - amount;
+                cout << "Amount Withdrawn Successfully." << endl;
+                cout << "Current Balance = Rs. " << balance;
+            }
+            else
+            {
+                cout << "Insufficient Balance.";
+            }
+            break;
+        case 3:
+            cout << "Current Balance = Rs. " << balance;
+            break;
+        case 4:
+            cout << "Thank You for Banking with Us!";
+            break;
+        default:
+            cout << "Invalid Choice!";
+    }
+    return 0;
+}`,
+        result: "Thus, the C++ menu-driven program for performing basic bank transactions such as Deposit, Withdraw, Balance Enquiry, and Exit using the switch statement was written, executed, and the desired output was obtained successfully."
+      },
+      {
+        id: "Ex :No:4a",
+        category: "Conditionals & Loops",
+        title: "LOOPING STATEMENTS - Star Pyramid Pattern Using FOR Loop in C++",
+        defaultStdin: "5",
+        aim: "To write a C++ program to display a star (*) pyramid pattern using the for loop.",
+        algorithm: [
+          "Start.",
+          "Declare an integer variable rows.",
+          "Read the number of rows from the user.",
+          "Use an outer for loop to iterate from 1 to rows.",
+          "Use the first inner for loop to print the required spaces.",
+          "Use the second inner for loop to print the stars (*).",
+          "Move to the next line after printing each row.",
+          "Stop."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int rows;
+    cout << "Enter the number of rows: ";
+    cin >> rows;
+    for(int i = 1; i <= rows; i++)
+    {
+        // Print spaces
+        for(int j = 1; j <= rows - i; j++)
+        {
+            cout << " ";
+        }
+        // Print stars
+        for(int k = 1; k <= (2 * i - 1); k++)
+        {
+            cout << "*";
+        }
+        cout << endl;
+    }
+    return 0;
+}`,
+        result: "Thus, the C++ program to display a star pyramid pattern using the for loop was written, executed, and the desired output was obtained successfully."
+      },
+      {
+        id: "Ex :No:4b",
+        category: "Conditionals & Loops",
+        title: "LOOPING STATEMENTS - Factorial of a Number Using while Loop in C++",
+        defaultStdin: "5",
+        aim: "To write a C++ program to find the factorial of a given number (N) using a while loop.",
+        algorithm: [
+          "Start.",
+          "Declare integer variables n, i, and fact.",
+          "Read the value of n from the user.",
+          "Initialize fact = 1 and i = 1.",
+          "Repeat the following steps while i <= n: Multiply fact by i. Increment i by 1.",
+          "Display the factorial value.",
+          "Stop."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int n, i = 1;
+    int fact = 1;
+    cout << "Enter a number: ";
+    cin >> n;
+    while (i <= n)
+    {
+        fact = fact * i;
+        i++;
+    }
+    cout << "Factorial of " << n << " = " << fact;
+    return 0;
+}`,
+        result: "Thus, the C++ program to find the factorial of a given number using a while loop was written, executed, and the desired output was obtained successfully."
+      },
+      {
+        id: "Ex :No:4c",
+        category: "Conditionals & Loops",
+        title: "LOOPING STATEMENTS - Check Whether a Number is Palindrome Using do...while Loop in C++",
+        defaultStdin: "121",
+        aim: "To write a C++ program to check whether a given number is a Palindrome using the do...while loop.\nPalindrome Number: A number that remains the same when its digits are reversed.Examples: 121, 1331, 1221",
+        algorithm: [
+          "Start.",
+          "Declare integer variables num, temp, remainder, and reverse.",
+          "Read the number from the user.",
+          "Store the original number in temp.",
+          "Initialize reverse = 0.",
+          "Repeat the following steps using a do...while loop: Find the last digit using num % 10. Append the digit to reverse using reverse = reverse * 10 + remainder. Remove the last digit using num = num / 10.",
+          "Continue the loop until num > 0.",
+          "Compare reverse with temp.",
+          "If both are equal, display \"Palindrome Number\".",
+          "Otherwise, display \"Not a Palindrome Number\".",
+          "Stop."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int num, temp, remainder, reverse = 0;
+    cout << "Enter a number: ";
+    cin >> num;
+    temp = num;
+    do
+    {
+        remainder = num % 10;
+        reverse = reverse * 10 + remainder;
+        num = num / 10;
+    }
+    while (num > 0);
+    if (temp == reverse)
+    {
+        cout << temp << " is a Palindrome Number.";
+    }
+    else
+    {
+        cout << temp << " is Not a Palindrome Number.";
+    }
+    return 0;
+}`,
+        result: "Thus, the C++ program to check whether a given number is a Palindrome using the do...while loop was written, executed, and the desired output was obtained successfully."
+      },
+      {
+        id: "Ex :No:5",
+        category: "OOP & Functions",
+        title: "Calculate Square of given number using In-line function",
+        defaultStdin: "5",
+        aim: "To write a C++ program to demonstrate the use of an inline function for calculating the square of a number.",
+        algorithm: [
+          "Start the program.",
+          "Define an inline function square() that accepts an integer.",
+          "Read a number from the user.",
+          "Call the inline function to calculate the square.",
+          "Display the result.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+inline int square(int n)
+{
+    return n * n;
+}
+int main()
+{
+    int n;
+    cout << "Enter a number: ";
+    cin >> n;
+    cout << "Square = " << square(n);
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate an inline function was successfully executed, and the square of the given number was obtained."
+      },
+      {
+        id: "Ex :No:6",
+        category: "OOP & Functions",
+        title: "Illustration of Friend function",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate the use of a friend function to access the private data members of a class.",
+        algorithm: [
+          "Start the program.",
+          "Define a class Number with a private data member n.",
+          "Declare display() as a friend function.",
+          "Initialize the private data member using a member function.",
+          "Define the friend function outside the class.",
+          "Access and display the private data member using the friend function.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Number
+{
+private:
+    int n;
+public:
+    void setNumber(int x)
+    {
+        n = x;
+    }
+    friend void display(Number obj);
+};
+void display(Number obj)
+{
+    cout << "Number = " << obj.n;
+}
+int main()
+{
+    Number obj;
+    obj.setNumber(25);
+    display(obj);
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate the friend function was successfully executed, and the friend function accessed the private data member of the class."
+      },
+      {
+        id: "Ex :No:7",
+        category: "OOP & Functions",
+        title: "Program using Constructor and Destructor",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate the use of a constructor and destructor in a class.",
+        algorithm: [
+          "Start the program.",
+          "Define a class Student.",
+          "Declare a constructor to initialize the student details.",
+          "Define a member function to display the student details.",
+          "Declare a destructor to display a message when the object is destroyed.",
+          "Create an object of the Student class.",
+          "Display the student details.",
+          "When the object goes out of scope, the destructor is automatically called.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Student
+{
+private:
+    int rollNo;
+    string name;
+public:
+    // Constructor
+    Student()
+    {
+        rollNo = 101;
+        name = "Arun";
+        cout << "Constructor is called" << endl;
+    }
+    // Member function
+    void display()
+    {
+        cout << "Roll No: " << rollNo << endl;
+        cout << "Name: " << name << endl;
+    }
+    // Destructor
+    ~Student()
+    {
+        cout << "Destructor is called" << endl;
+    }
+};
+int main()
+{
+    Student s;
+    s.display();
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate the constructor and destructor was successfully executed, and the constructor and destructor were invoked automatically."
+      },
+      {
+        id: "Ex :No:8a",
+        category: "Inheritance",
+        title: "Single Inheritance",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate single inheritance, where a derived class inherits the properties and member functions of a single base class.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Person with data members and member functions.",
+          "Create a derived class Student that inherits from Person.",
+          "Define a member function in the derived class to display student details.",
+          "Create an object of the derived class.",
+          "Access the inherited members and derived class members using the object.",
+          "Display the details.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Base class
+class Person
+{
+protected:
+    string name;
+    int age;
+public:
+    void getPersonDetails()
+    {
+        name = "Arun";
+        age = 20;
+    }
+};
+// Derived class
+class Student : public Person
+{
+private:
+    int rollNo;
+public:
+    void getStudentDetails()
+    {
+        rollNo = 101;
+    }
+    void display()
+    {
+        cout << "Name    : " << name << endl;
+        cout << "Age     : " << age << endl;
+        cout << "Roll No : " << rollNo << endl;
+    }
+};
+int main()
+{
+    Student s;
+    s.getPersonDetails();
+    s.getStudentDetails();
+    cout << "Student Details" << endl;
+    s.display();
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate single inheritance was successfully executed, and the derived class successfully accessed the members of the base class."
+      },
+      {
+        id: "Ex :No:8b",
+        category: "Inheritance",
+        title: "Multiple Inheritance",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate multiple inheritance, where a derived class inherits properties and member functions from more than one base class.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Student with student details.",
+          "Create another base class Sports with sports details.",
+          "Create a derived class Result that inherits from both Student and Sports.",
+          "Define a member function in Result to display all the details.",
+          "Create an object of the derived class.",
+          "Access the members of both base classes through the derived class object.",
+          "Display the details.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// First base class
+class Student
+{
+protected:
+    int rollNo;
+    string name;
+public:
+    void getStudentDetails()
+    {
+        rollNo = 101;
+        name = "Arun";
+    }
+};
+// Second base class
+class Sports
+{
+protected:
+    string sport;
+public:
+    void getSportsDetails()
+    {
+        sport = "Cricket";
+    }
+};
+// Derived class
+class Result : public Student, public Sports
+{
+public:
+    void display()
+    {
+        cout << "Student Details" << endl;
+        cout << "Roll No : " << rollNo << endl;
+        cout << "Name    : " << name << endl;
+        cout << "Sport   : " << sport << endl;
+    }
+};
+int main()
+{
+    Result r;
+    r.getStudentDetails();
+    r.getSportsDetails();
+    r.display();
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate Multiple inheritance was successfully executed, and the derived class accessed the members of both base classes."
+      },
+      {
+        id: "Ex :No:8c",
+        category: "Inheritance",
+        title: "Hierarchical Inheritance",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate hierarchical inheritance, where multiple derived classes inherit properties and member functions from a single base class.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Person with common details such as name and age.",
+          "Create a derived class Student that inherits from Person.",
+          "Create another derived class Teacher that also inherits from Person.",
+          "Define member functions to display the details of Student and Teacher.",
+          "Create objects for both derived classes.",
+          "Access the inherited members using the derived class objects.",
+          "Display the details of both student and teacher.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Base class
+class Person
+{
+protected:
+    string name;
+    int age;
+public:
+    void getPersonDetails()
+    {
+        name = "Arun";
+        age = 25;
+    }
+};
+// First derived class
+class Student : public Person
+{
+private:
+    int rollNo;
+public:
+    void getStudentDetails()
+    {
+        rollNo = 101;
+    }
+    void displayStudent()
+    {
+        cout << "Student Details" << endl;
+        cout << "Name    : " << name << endl;
+        cout << "Age     : " << age << endl;
+        cout << "Roll No : " << rollNo << endl;
+    }
+};
+// Second derived class
+class Teacher : public Person
+{
+private:
+    string subject;
+public:
+    void getTeacherDetails()
+    {
+        subject = "C++";
+    }
+    void displayTeacher()
+    {
+        cout << "\\nTeacher Details" << endl;
+        cout << "Name    : " << name << endl;
+        cout << "Age     : " << age << endl;
+        cout << "Subject : " << subject << endl;
+    }
+};
+int main()
+{
+    Student s;
+    Teacher t;
+    s.getPersonDetails();
+    s.getStudentDetails();
+    t.getPersonDetails();
+    t.getTeacherDetails();
+    s.displayStudent();
+    t.displayTeacher();
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate hierarchical inheritance was successfully executed, and the derived classes successfully accessed the members of the common base class."
+      },
+      {
+        id: "Ex :No:8d",
+        category: "Inheritance",
+        title: "Multi-level Inheritance",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate multilevel inheritance, where a derived class inherits from another derived class, forming a chain of inheritance.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Person with common details.",
+          "Create a derived class Student that inherits from Person.",
+          "Create another derived class Result that inherits from Student.",
+          "Define member functions to initialize and display the details.",
+          "Create an object of the Result class.",
+          "Access the members of Person and Student through the Result object.",
+          "Display all the details.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Base class
+class Person
+{
+protected:
+    string name;
+    int age;
+public:
+    void getPersonDetails()
+    {
+        name = "Arun";
+        age = 20;
+    }
+};
+// Intermediate derived class
+class Student : public Person
+{
+protected:
+    int rollNo;
+public:
+    void getStudentDetails()
+    {
+        rollNo = 101;
+    }
+};
+// Derived class
+class Result : public Student
+{
+private:
+    int marks;
+public:
+    void getResult()
+    {
+        marks = 85;
+    }
+    void display()
+    {
+        cout << "Student Details" << endl;
+        cout << "Name    : " << name << endl;
+        cout << "Age     : " << age << endl;
+        cout << "Roll No : " << rollNo << endl;
+        cout << "Marks   : " << marks << endl;
+    }
+};
+int main()
+{
+    Result r;
+    r.getPersonDetails();
+    r.getStudentDetails();
+    r.getResult();
+    r.display();
+    return 0;
+}`,
+        result: "hus, the C++ program to demonstrate multilevel inheritance was successfully executed, and the derived class accessed the members inherited through multiple levels."
+      },
+      {
+        id: "Ex :No:8e",
+        category: "Inheritance",
+        title: "Hybrid Inheritance",
+        defaultStdin: "",
+        aim: "To write a C++ program to demonstrate hybrid inheritance, which is a combination of two or more types of inheritance.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Student.",
+          "Create a derived class Test that inherits from Student.",
+          "Create another base class Sports.",
+          "Create a class Result that inherits from both Test and Sports.",
+          "Initialize the student, marks, and sports details.",
+          "Create an object of the Result class.",
+          "Display all the details using the object.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Base class
+class Student
+{
+protected:
+    int rollNo;
+    string name;
+public:
+    void getStudentDetails()
+    {
+        rollNo = 101;
+        name = "Arun";
+    }
+};
+// Derived class from Student
+class Test : public Student
+{
+protected:
+    int marks;
+public:
+    void getMarks()
+    {
+        marks = 85;
+    }
+};
+// Another base class
+class Sports
+{
+protected:
+    int sportsScore;
+public:
+    void getSportsScore()
+    {
+        sportsScore = 90;
+    }
+};
+// Result inherits from Test and Sports
+class Result : public Test, public Sports
+{
+public:
+    void display()
+    {
+        cout << "Student Result" << endl;
+        cout << "Roll No      : " << rollNo << endl;
+        cout << "Name         : " << name << endl;
+        cout << "Marks        : " << marks << endl;
+        cout << "Sports Score : " << sportsScore << endl;
+    }
+};
+int main()
+{
+    Result r;
+    r.getStudentDetails();
+    r.getMarks();
+    r.getSportsScore();
+    r.display();
+    return 0;
+}`,
+        result: "Thus, the C++ program to demonstrate hybrid inheritance was successfully executed, and the details inherited through different inheritance types were displayed successfully."
+      },
+      {
+        id: "Ex :No:9a",
+        category: "OOP & Functions",
+        title: "Illustration program for Unary operator using Friend function",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate unary operator overloading using a friend function.",
+        algorithm: [
+          "Start the program.",
+          "Define a class Number with an integer data member n.",
+          "Define a constructor to initialize the value of n.",
+          "Declare the unary minus operator - as a friend function.",
+          "Define the friend function to change the sign of the number.",
+          "Create an object and display its original value.",
+          "Apply the unary - operator to the object.",
+          "Display the result.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Number
+{
+    int n;
+public:
+    Number(int x)
+    {
+        n = x;
+    }
+    friend void operator-(Number &obj);
+    void display()
+    {
+        cout << "Value = " << n << endl;
+    }
+};
+void operator-(Number &obj)
+{
+    obj.n = -obj.n;
+}
+int main()
+{
+    Number num(10);
+    cout << "Before unary operator overloading:" << endl;
+    num.display();
+    -num;
+    cout << "After unary operator overloading:" << endl;
+    num.display();
+    return 0;
+}`,
+        result: "Thus the program successfully illustrates unary operator overloading using a friend function."
+      },
+      {
+        id: "Ex :No:9b",
+        category: "OOP & Functions",
+        title: "Illustration program for Binary operator using Friend function",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate binary operator overloading using a friend function.",
+        algorithm: [
+          "Start the program.",
+          "Define a class Number with an integer data member n.",
+          "Define a constructor to initialize the value of n.",
+          "Declare the binary + operator as a friend function.",
+          "Define the friend function to add the values of two objects.",
+          "Create two objects and initialize them with values.",
+          "Apply the overloaded + operator to the two objects.",
+          "Display the result.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Number
+{
+    int n;
+public:
+    Number(int x)
+    {
+        n = x;
+    }
+    friend Number operator+(Number a, Number b);
+    void display()
+    {
+        cout << n << endl;
+    }
+};
+Number operator+(Number a, Number b)
+{
+    Number temp(0);
+    temp.n = a.n + b.n;
+    return temp;
+}
+int main()
+{
+    Number n1(10), n2(20), n3(0);
+    n3 = n1 + n2;
+    cout << "First number = ";
+    n1.display();
+    cout << "Second number = ";
+    n2.display();
+    cout << "Sum = ";
+    n3.display();
+    return 0;
+}`,
+        result: "The program successfully illustrates binary + operator overloading using a friend function."
+      },
+      {
+        id: "Ex :No:10a",
+        category: "Basics",
+        title: "Pointer Manipulation",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate pointer manipulation using a pointer variable.",
+        algorithm: [
+          "Start the program.",
+          "Declare an integer variable and assign a value to it.",
+          "Declare an integer pointer.",
+          "Store the address of the variable in the pointer.",
+          "Display the value of the variable using the pointer.",
+          "Display the address of the variable using the pointer.",
+          "Modify the value using the pointer.",
+          "Display the modified value.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int num = 10;
+    int *ptr;
+    ptr = &num;
+    cout << "Original value = " << num << endl;
+    cout << "Address of num = " << ptr << endl;
+    cout << "Value using pointer = " << *ptr << endl;
+    *ptr = 20;
+    cout << "Modified value = " << num << endl;
+    return 0;
+}`,
+        result: "The program successfully demonstrates pointer manipulation by accessing and modifying the value of a variable using a pointer."
+      },
+      {
+        id: "Ex :No:11b",
+        category: "OOP & Functions",
+        title: "‘this’ Pointer",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate the use of the this pointer.",
+        algorithm: [
+          "Start the program.",
+          "Define a class Student with data members rollno and marks.",
+          "Define a member function setData() to assign values using the this pointer.",
+          "Define a member function display() to display the values.",
+          "Create an object of the class.",
+          "Call setData() and pass the values.",
+          "Call display() to print the values.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Student
+{
+    int rollno;
+    int marks;
+public:
+    void setData(int rollno, int marks)
+    {
+        this->rollno = rollno;
+        this->marks = marks;
+    }
+    void display()
+    {
+        cout << "Roll Number = " << this->rollno << endl;
+        cout << "Marks = " << this->marks << endl;
+    }
+};
+int main()
+{
+    Student s;
+    s.setData(101, 85);
+    s.display();
+    return 0;
+}`,
+        result: "The program successfully illustrates the use of the this pointer to refer to the current object's data members."
+      },
+      {
+        id: "Ex :No:11a",
+        category: "OOP & Functions",
+        title: "Virtual Function",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate the concept of a virtual function using a base class pointer.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Shape.",
+          "Declare a virtual function area() in the base class.",
+          "Create a derived class Rectangle.",
+          "Define the area() function in the derived class.",
+          "Create an object of Rectangle.",
+          "Create a pointer of the base class and assign the address of the derived class object.",
+          "Call the area() function using the base class pointer.",
+          "Display the area.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Shape
+{
+public:
+    virtual void area()
+    {
+        cout << "Area of Shape" << endl;
+    }
+};
+class Rectangle : public Shape
+{
+public:
+    void area()
+    {
+        int l = 10, b = 5;
+        cout << "Area of Rectangle = " << l * b << endl;
+    }
+};
+int main()
+{
+    Shape *ptr;
+    Rectangle r;
+    ptr = &r;
+    ptr->area();
+    return 0;
+}`,
+        result: "The program successfully illustrates the virtual function and runtime polymorphism."
+      },
+      {
+        id: "Ex :No:11c",
+        category: "OOP & Functions",
+        title: "Pure Virtual Function",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate the concept of a pure virtual function using an abstract class.",
+        algorithm: [
+          "Start the program.",
+          "Create a base class Shape.",
+          "Declare a pure virtual function area() using = 0.",
+          "Create a derived class Circle.",
+          "Define the area() function in the Circle class.",
+          "Create an object of the Circle class.",
+          "Call the area() function using the derived class object.",
+          "Display the area of the circle.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+class Shape
+{
+public:
+    virtual void area() = 0;
+};
+class Circle : public Shape
+{
+public:
+    void area()
+    {
+        int r = 5;
+        cout << "Area of Circle = " << 3.14 * r * r << endl;
+    }
+};
+int main()
+{
+    Circle c;
+    c.area();
+    return 0;
+}`,
+        result: "The program successfully illustrates the concept of a pure virtual function."
+      },
+      {
+        id: "Ex No: 12a",
+        category: "Advanced",
+        title: "Sorting using Function Template",
+        defaultStdin: "50 20 10 40 30",
+        aim: "To write a C++ program to sort the elements of an array using a function template.",
+        algorithm: [
+          "Start the program.",
+          "Define a function template sortArray() that accepts an array and its size.",
+          "Read the elements of the array from the user.",
+          "Use the bubble sort technique to compare adjacent elements.",
+          "Swap the elements if they are in the wrong order.",
+          "Display the sorted array.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Function Template
+template <class T>
+void sortArray(T a[], int n)
+{
+    T temp;
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (a[j] > a[j + 1])
+            {
+                temp = a[j];
+                a[j] = a[j + 1];
+                a[j + 1] = temp;
+            }
+        }
+    }
+}
+int main()
+{
+    int a[5];
+    cout << "Enter 5 elements: ";
+    for (int i = 0; i < 5; i++)
+        cin >> a[i];
+    sortArray(a, 5);
+    cout << "Sorted elements: ";
+    for (int i = 0; i < 5; i++)
+        cout << a[i] << " ";
+    return 0;
+}`,
+        result: "Thus, the C++ program to sort the elements of an array using a function template was successfully executed and the sorted elements were obtained."
+      },
+      {
+        id: "Ex No: 12b",
+        category: "Advanced",
+        title: "Overloading of Function Templates",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate overloading of function templates by performing addition of different numbers of arguments.",
+        algorithm: [
+          "Start the program.",
+          "Define a function template add() with two arguments.",
+          "Define another overloaded function template add() with three arguments.",
+          "Read the values from the user.",
+          "Call the appropriate add() function based on the number of arguments.",
+          "Display the results.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Function template with two arguments
+template <class T>
+T add(T a, T b)
+{
+    return a + b;
+}
+// Overloaded function template with three arguments
+template <class T>
+T add(T a, T b, T c)
+{
+    return a + b + c;
+}
+int main()
+{
+    cout << "Sum of two numbers: " << add(10, 20) << endl;
+    cout << "Sum of three numbers: " << add(10, 20, 30) << endl;
+    cout << "Sum of two decimal numbers: " << add(2.5, 3.5) << endl;
+    return 0;
+}`,
+        result: "Thus, the C++ program to illustrate overloading of function templates using addition was successfully executed and the required results were obtained."
+      },
+      {
+        id: "Ex No: 12C",
+        category: "Advanced",
+        title: "Generic Programming using Class Template",
+        defaultStdin: "",
+        aim: "To write a C++ program to illustrate the use of a Class Template.",
+        algorithm: [
+          "Start the program.",
+          "Define a class template named Sample.",
+          "Declare a data member of generic type T.",
+          "Define a member function to assign a value.",
+          "Define another member function to display the value.",
+          "Create objects of the class template using different data types.",
+          "Display the values.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+// Class Template
+template <class T>
+class Sample
+{
+    T value;
+public:
+    void setValue(T v)
+    {
+        value = v;
+    }
+    void display()
+    {
+        cout << "Value: " << value << endl;
+    }
+};
+int main()
+{
+    Sample<int> obj1;
+    Sample<float> obj2;
+    Sample<char> obj3;
+    obj1.setValue(100);
+    obj2.setValue(25.5);
+    obj3.setValue('A');
+    obj1.display();
+    obj2.display();
+    obj3.display();
+    return 0;
+}`,
+        result: "Thus, the C++ program to illustrate the Class Template was successfully executed, and the values of different data types were displayed."
+      },
+      {
+        id: "Ex No: 13.a",
+        category: "Advanced",
+        title: "Exception Handling for Division by Zero Error",
+        defaultStdin: "10 0",
+        aim: "To write a C++ program to illustrate exception handling using try, throw, and catch statements.",
+        algorithm: [
+          "Start the program.",
+          "Read two integer values from the user.",
+          "Place the division operation inside the try block.",
+          "Check whether the second number is zero.",
+          "If the second number is zero, throw an exception using throw.",
+          "Handle the exception using the catch block.",
+          "Otherwise, calculate and display the division result.",
+          "Stop the program."
+        ],
+        code: `#include <iostream>
+using namespace std;
+int main()
+{
+    int a, b;
+    cout << "Enter two numbers: ";
+    cin >> a >> b;
+    try
+    {
+        if (b == 0)
+            throw b;
+        cout << "Result = " << a / b << endl;
+    }
+    catch (int x)
+    {
+        cout << "Exception: Division by zero is not allowed";
+    }
+    return 0;
+}`,
+        result: "Thus, the C++ program to illustrate exception handling using try, throw, and catch was successfully executed, and the exception was handled properly."
+      },
+      {
+        id: "Ex No: 13b",
+        category: "Advanced",
+        title: "Exception Handling for Invalid Array Indices",
+        defaultStdin: "",
+        aim: "To handle invalid array index using exception handling.",
+        algorithm: [
+          "Start the program.",
+          "Declare an integer array with predefined elements.",
+          "Declare an index variable and assign it a value that is out of bounds (greater than or equal to the array size).",
+          "Inside a try block, check if the index is greater than or equal to the size of the array.",
+          "If the condition is true, throw the index as an exception.",
+          "If false, print the array element at that index.",
+          "Catch the integer exception and print an error message indicating an invalid index.",
+          "End the program."
+        ],
+        code: `#include<iostream>
+using namespace std;
+int main() {
+    int arr[3] = {1, 2, 3}; int index = 5;
+    try {
+        if (index >= 3) {
+            throw index;
+        }
+        cout << arr[index] << endl;
+    }
+    catch (int i) {
+        cout << "Exception: Array index " << i << " out of bounds!" << endl;
+    }
+    return 0;
+}`,
+        result: "The program to handle an invalid array index using exception handling was written and executed successfully."
+      },
+      {
+        id: "Ex No: 14a",
+        category: "Advanced",
+        title: "Error Handling for File Opening Operations",
+        defaultStdin: "",
+        aim: "To write a C++ program that attempts to open a file and handles the error if the file does not exist.",
+        algorithm: [
+          "Start the program.",
+          "Declare an ifstream file object.",
+          "Try to open a file named \"sample.txt\".",
+          "Check if the file opened successfully using if (!file).",
+          "If the file failed to open, display an error message \"Error: File not found!\" and terminate the program.",
+          "If the file opens successfully, read its contents line by line and print them.",
+          "Close the file.",
+          "End the program."
+        ],
+        code: `#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+int main()
+{
+    ifstream file("sample.txt");
+    if (!file)
+    {
+        cout << "Error: File not found!" << endl;
+        return 1;
+    }
+    string line;
+    while (getline(file, line))
+    {
+        cout << line << endl;
+    }
+    file.close();
+    return 0;
+}`,
+        result: "The program to handle errors during file opening operations was written and executed successfully."
+      },
+      {
+        id: "Ex No: 14.b",
+        category: "Advanced",
+        title: "Error Handling for File Writing Operations",
+        defaultStdin: "",
+        aim: "To write a C++ program that writes data to a file, while checking for file opening/writing errors.",
+        algorithm: [
+          "Start the program.",
+          "Declare an ofstream object fout.",
+          "Attempt to open a file named \"output.txt\" for writing.",
+          "Check if the file failed to open using if (!fout).",
+          "If it fails, display an error message and exit the program.",
+          "If it opens successfully, write a text message into the file using the << operator.",
+          "Close the file.",
+          "Print a confirmation message to the console.",
+          "End the program."
+        ],
+        code: `#include <iostream>
+#include <fstream>
+using namespace std;
+int main()
+{
+    ofstream fout("output.txt");
+    if (!fout)
+    {
+        cout << "Error: Unable to create file!" << endl;
+        return 1;
+    }
+    fout << "Hello! File writing succeeded.";
+    fout.close();
+    cout << "Data written successfully." << endl;
+    return 0;
+}`,
+        result: "The program to handle errors during file writing operations was written and executed successfully."
+      },
+      {
+        id: "Ex No: 15.a",
+        category: "OOP & Functions",
+        title: "Student Details Management System",
+        defaultStdin: "",
+        aim: "To develop an application that uses classes, objects, constructors, and member functions to manage student details.",
+        algorithm: [
+          "Start the program.",
+          "Create a class Student with private data members: name, rollNo, and marks.",
+          "Define a parameterized constructor to initialize these values.",
+          "Define a member function display() to output the student information.",
+          "In the main() function, create objects of the Student class and pass details through the constructor.",
+          "Call the display() function for each object to print their details.",
+          "End the program"
+        ],
+        code: `#include <iostream>
+#include <string>
+using namespace std;
+class Student
+{
+    string name;
+    int rollNo;
+    float marks;
+public:
+    Student(string n, int r, float m)
+    {
+        name = n;
+        rollNo = r;
+        marks = m;
+    }
+    void display()
+    {
+        cout << "Name: " << name << endl;
+        cout << "Roll No: " << rollNo << endl;
+        cout << "Marks: " << marks << endl;
+    }
+};
+int main()
+{
+    Student s1("Arun", 101, 89.5);
+    Student s2("Meena", 102, 92.0);
+    s1.display();
+    cout << endl;
+    s2.display();
+    return 0;
+}`,
+        result: "The program to manage student details using classes, objects, and constructors was written and executed successfully"
+      },
+      {
+        id: "Ex No: 15.b",
+        category: "OOP & Functions",
+        title: "Simple Banking System Application",
+        defaultStdin: "",
+        aim: "To develop a simple banking system using OOP features such as classes, member functions, and encapsulation.",
+        algorithm: [
+          "Start the program.",
+          "Create a class BankAccount with private variables name and balance.",
+          "Define member functions deposit(), withdraw(), and display().",
+          "In the main() function, create a BankAccount object and initialize it with a name and starting balance.",
+          "Deposit a specific amount into the account using the deposit() function.",
+          "Withdraw a specific amount from the account using the withdraw() function, ensuring sufficient balance.",
+          "Display the final account details and balance using the display() function.",
+          "End the program."
+        ],
+        code: `#include <iostream>
+#include <string>
+using namespace std;
+class BankAccount
+{
+    string name;
+    float balance;
+public:
+    BankAccount(string n, float b)
+    {
+        name = n;
+        balance = b;
+    }
+    void deposit(float amt)
+    {
+        balance += amt;
+        cout << "Amount Deposited: " << amt << endl;
+    }
+    void withdraw(float amt)
+    {
+        if (amt > balance)
+        {
+            cout << "Insufficient Balance!" << endl;
+        }
+        else
+        {
+            balance -= amt;
+            cout << "Amount Withdrawn: " << amt << endl;
+        }
+    }
+    void display()
+    {
+        cout << "Account Holder: " << name << endl;
+        cout << "Balance: " << balance << endl;
+    }
+};
+int main()
+{
+    BankAccount b1("Arun", 5000);
+    b1.display();
+    cout << endl;
+    b1.deposit(2000);
+    b1.withdraw(1500);
+    cout << endl;
+    b1.display();
+    return 0;
+}`,
+        result: "The program to develop a simple banking system using OOP features was written and executed successfully."
+      }
+    ];
+
+    let currentCategory = "all";
+    let currentIdx = 0;
+
+    const labList = document.getElementById("labList");
+    const searchInput = document.getElementById("searchInput");
+    const chips = document.querySelectorAll(".filter-chip");
+    const editorArea = document.getElementById("editorArea");
+    const terminalOutput = document.getElementById("terminalOutput");
+    const stdinInput = document.getElementById("stdinInput");
+    const execStatus = document.getElementById("execStatus");
+    const runBtn = document.getElementById("runCodeBtn");
+    const toggleSandboxBtn = document.getElementById("toggleSandboxBtn");
+    const sandboxFrame = document.getElementById("sandboxFrame");
+    const apiSimulator = document.getElementById("apiSimulator");
+    const sidebarDrawer = document.getElementById("sidebarDrawer");
+    const drawerOverlay = document.getElementById("drawerOverlay");
+    const openDrawerBtn = document.getElementById("openDrawerBtn");
+    const closeDrawerBtn = document.getElementById("closeDrawerBtn");
+    const mobileExBadge = document.getElementById("mobileExBadge");
+
+    function openSidebar() {
+      sidebarDrawer.classList.add("open");
+      drawerOverlay.classList.add("active");
+    }
+
+    function closeSidebar() {
+      sidebarDrawer.classList.remove("open");
+      drawerOverlay.classList.remove("active");
+    }
+
+    openDrawerBtn.addEventListener("click", openSidebar);
+    closeDrawerBtn.addEventListener("click", closeSidebar);
+    drawerOverlay.addEventListener("click", closeSidebar);
+
+    function renderList() {
+      const q = searchInput.value.toLowerCase();
+      labList.innerHTML = "";
+      exercises.forEach((item, index) => {
+        const matchesCat = (currentCategory === "all" || item.category === currentCategory);
+        const matchesQuery = item.title.toLowerCase().includes(q) || item.id.toLowerCase().includes(q);
+        if (matchesCat && matchesQuery) {
+          const li = document.createElement("li");
+          li.className = `lab-item ${index === currentIdx ? 'active' : ''}`;
+          li.innerHTML = `
+            <div class="lab-item-header">
+              <span class="lab-num">${item.id}</span>
+              <span class="lab-badge">${item.category}</span>
+            </div>
+            <div class="lab-item-title">${item.title}</div>
+          `;
+          li.onclick = () => {
+            selectExercise(index);
+            if (window.innerWidth <= 900) closeSidebar();
+          };
+          labList.appendChild(li);
+        }
+      });
+    }
+
+    function selectExercise(index) {
+      currentIdx = index;
+      const ex = exercises[index];
+      document.getElementById("detailExId").innerText = ex.id;
+      mobileExBadge.innerText = ex.id;
+      document.getElementById("detailTitle").innerText = ex.title;
+      document.getElementById("detailAim").innerText = ex.aim;
+
+      const algoList = document.getElementById("detailAlgorithm");
+      algoList.innerHTML = "";
+      ex.algorithm.forEach(step => {
+        const li = document.createElement("li");
+        li.innerText = step;
+        algoList.appendChild(li);
+      });
+
+      editorArea.value = ex.code;
+      stdinInput.value = ex.defaultStdin || "";
+      terminalOutput.innerText = `Program loaded. Tap "▶ Run" to execute.`;
+      execStatus.innerText = "GCC 9.2";
+      execStatus.style.color = "var(--text-muted)";
+      document.getElementById("detailResult").innerText = ex.result;
+      renderList();
+    }
+
+    async function executeCppCode() {
+      const sourceCode = editorArea.value;
+      const inputData = stdinInput.value;
+
+      runBtn.disabled = true;
+      execStatus.innerText = "Running...";
+      execStatus.style.color = "var(--accent)";
+      terminalOutput.innerText = "Dispatching code to GCC engine...\n";
+
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 9000);
+
+        const response = await fetch("https://ce.judge0.com/submissions?wait=true", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            source_code: sourceCode,
+            language_id: 54,
+            stdin: inputData
+          })
+        });
+        clearTimeout(timeoutId);
+
+        const data = await response.json();
+        runBtn.disabled = false;
+
+        let output = "";
+        if (data.compile_output) output += `[Compilation Error]:\n${data.compile_output}\n`;
+        if (data.stderr) output += `[Stderr]:\n${data.stderr}\n`;
+        if (data.stdout) output += data.stdout;
+        
+        terminalOutput.innerText = output || "Program finished with exit code 0.";
+        execStatus.innerText = data.status ? data.status.description : "Finished";
+        execStatus.style.color = "var(--green)";
+      } catch (err) {
+        terminalOutput.innerText = 
+          "Connection to remote compiler timed out or was blocked.\n\n" +
+          "Tap 'Switch to Sandbox View' above to run without network restrictions.";
+        execStatus.innerText = "Switch to Sandbox";
+        execStatus.style.color = "#f59e0b";
+        runBtn.disabled = false;
+      }
+    }
+
+    toggleSandboxBtn.addEventListener("click", () => {
+      if (sandboxFrame.style.display === "block") {
+        sandboxFrame.style.display = "none";
+        apiSimulator.style.display = window.innerWidth <= 900 ? "flex" : "grid";
+        toggleSandboxBtn.innerText = "Switch to Sandbox View";
+      } else {
+        sandboxFrame.style.display = "block";
+        apiSimulator.style.display = "none";
+        toggleSandboxBtn.innerText = "Switch to Terminal View";
+      }
+    });
+
+    runBtn.addEventListener("click", executeCppCode);
+    
+    document.getElementById("resetCodeBtn").addEventListener("click", () => {
+      editorArea.value = exercises[currentIdx].code;
+      stdinInput.value = exercises[currentIdx].defaultStdin || "";
+    });
+
+    document.getElementById("copyCodeBtn").addEventListener("click", () => {
+      navigator.clipboard.writeText(editorArea.value).then(() => {
+        const btn = document.getElementById("copyCodeBtn");
+        btn.innerText = "Copied!";
+        setTimeout(() => (btn.innerText = "Copy"), 1500);
+      });
+    });
+
+    chips.forEach(chip => {
+      chip.addEventListener("click", () => {
+        chips.forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+        currentCategory = chip.dataset.cat;
+        renderList();
+      });
+    });
+
+    searchInput.addEventListener("input", renderList);
+    selectExercise(0);
+  </script>
+</body>
+</html>
