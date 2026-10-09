@@ -340,10 +340,11 @@
     }
     #sandboxFrame {
       width: 100%;
-      height: 480px;
-      border: none;
+      height: 500px;
+      border: 1px solid var(--card-border);
       border-radius: 8px;
       display: none;
+      background: #111827;
     }
     .drawer-overlay {
       display: none;
@@ -392,7 +393,7 @@
         min-height: unset;
       }
       #sandboxFrame { 
-        height: 400px; 
+        height: 480px; 
       }
     }
   </style>
@@ -474,7 +475,12 @@
           </div>
         </div>
 
-        <iframe id="sandboxFrame" loading="lazy" src="https://onecompiler.com/embed/cpp?listenToEvents=true&hideNew=true&hideTitle=true"></iframe>
+        <iframe 
+          id="sandboxFrame" 
+          src="about:blank"
+          allow="clipboard-write; clipboard-read"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+        </iframe>
       </div>
 
       <div class="section-card">
@@ -1596,7 +1602,12 @@ using namespace std;
 class Shape
 {
 public:
-    virtual void area()
+    virtual void area() = 0;
+};
+class Circle : public Shape
+{
+public:
+    void area()
     {
         int r = 5;
         cout << "Area of Circle = " << 3.14 * r * r << endl;
@@ -2062,6 +2073,35 @@ int main()
       });
     }
 
+    function syncCodeToSandbox(code) {
+      if (sandboxFrame.contentWindow) {
+        sandboxFrame.contentWindow.postMessage({
+          eventType: 'populateCode',
+          language: 'cpp',
+          files: [
+            {
+              name: 'main.cpp',
+              content: code
+            }
+          ]
+        }, '*');
+      }
+    }
+
+    function loadSandboxWithCode() {
+      const currentCode = editorArea.value || exercises[currentIdx].code;
+      const targetSrc = "https://onecompiler.com/embed/cpp?listenToEvents=true&hideNew=true&hideTitle=true&hideLanguageSelection=true";
+      
+      if (!sandboxFrame.src || sandboxFrame.src === "about:blank" || !sandboxFrame.src.includes("onecompiler.com")) {
+        sandboxFrame.src = targetSrc;
+        sandboxFrame.onload = () => {
+          setTimeout(() => syncCodeToSandbox(currentCode), 500);
+        };
+      } else {
+        syncCodeToSandbox(currentCode);
+      }
+    }
+
     function selectExercise(index) {
       currentIdx = index;
       const ex = exercises[index];
@@ -2084,6 +2124,11 @@ int main()
       execStatus.innerText = "GCC 9.2";
       execStatus.style.color = "var(--text-muted)";
       document.getElementById("detailResult").innerText = ex.result;
+
+      if (sandboxFrame.style.display === "block") {
+        syncCodeToSandbox(ex.code);
+      }
+
       renderList();
     }
 
@@ -2134,7 +2179,8 @@ int main()
     }
 
     toggleSandboxBtn.addEventListener("click", () => {
-      if (sandboxFrame.style.display === "block") {
+      const isSandboxActive = sandboxFrame.style.display === "block";
+      if (isSandboxActive) {
         sandboxFrame.style.display = "none";
         apiSimulator.style.display = window.innerWidth <= 900 ? "flex" : "grid";
         toggleSandboxBtn.innerText = "Switch to Sandbox View";
@@ -2142,6 +2188,7 @@ int main()
         sandboxFrame.style.display = "block";
         apiSimulator.style.display = "none";
         toggleSandboxBtn.innerText = "Switch to Terminal View";
+        loadSandboxWithCode();
       }
     });
 
@@ -2150,6 +2197,9 @@ int main()
     document.getElementById("resetCodeBtn").addEventListener("click", () => {
       editorArea.value = exercises[currentIdx].code;
       stdinInput.value = exercises[currentIdx].defaultStdin || "";
+      if (sandboxFrame.style.display === "block") {
+        syncCodeToSandbox(exercises[currentIdx].code);
+      }
     });
 
     document.getElementById("copyCodeBtn").addEventListener("click", () => {
