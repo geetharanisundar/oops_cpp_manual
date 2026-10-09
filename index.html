@@ -29,6 +29,7 @@
       color: var(--text);
       display: flex;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       position: relative;
     }
@@ -173,15 +174,21 @@
       display: flex;
       flex-direction: column;
       height: 100vh;
+      height: 100dvh;
+      min-width: 0;
       overflow: hidden;
     }
     main {
       flex: 1;
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
       padding: 1.5rem;
       display: flex;
       flex-direction: column;
       gap: 1.25rem;
+    }
+    main > .section-card:last-child {
+      margin-bottom: 2rem;
     }
     .content-header {
       border-bottom: 1px solid var(--card-border);
@@ -328,6 +335,8 @@
       color: #cbd5e1;
       font-size: 0.88rem;
       line-height: 1.5;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     #sandboxFrame {
       width: 100%;
@@ -345,6 +354,10 @@
       backdrop-filter: blur(2px);
     }
     @media (max-width: 900px) {
+      body {
+        height: 100vh;
+        height: 100dvh;
+      }
       .mobile-nav-bar { display: flex; }
       .close-drawer-btn { display: block; }
       aside {
@@ -359,10 +372,28 @@
       }
       aside.open { transform: translateX(0); }
       .drawer-overlay.active { display: block; }
-      main { padding: 1rem; gap: 1rem; }
-      .simulator-container { grid-template-columns: 1fr; }
-      .editor-pane, .terminal-pane { height: 340px; }
-      #sandboxFrame { height: 400px; }
+      .content-wrapper {
+        height: 100vh;
+        height: 100dvh;
+      }
+      main { 
+        padding: 1rem; 
+        gap: 1rem; 
+        padding-bottom: 5rem;
+      }
+      main > .section-card:last-child {
+        margin-bottom: 2rem;
+      }
+      .simulator-container { 
+        grid-template-columns: 1fr; 
+      }
+      .editor-pane, .terminal-pane { 
+        height: 340px; 
+        min-height: unset;
+      }
+      #sandboxFrame { 
+        height: 400px; 
+      }
     }
   </style>
 </head>
@@ -1565,12 +1596,7 @@ using namespace std;
 class Shape
 {
 public:
-    virtual void area() = 0;
-};
-class Circle : public Shape
-{
-public:
-    void area()
+    virtual void area()
     {
         int r = 5;
         cout << "Area of Circle = " << 3.14 * r * r << endl;
