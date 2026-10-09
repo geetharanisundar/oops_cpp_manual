@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -16,7 +16,35 @@
       --text-muted: #94a3b8;
       --code-bg: #090d16;
       --tag-bg: #1e3a5f;
+      --sidebar-bg: #111827;
+      --pane-header-bg: #131d2e;
+      --terminal-bg: #06090f;
+      --stdin-bar-bg: #0b1120;
+      --result-box-bg: rgba(16, 185, 129, 0.08);
+      --editor-text: #e2e8f0;
+      --body-text-secondary: #cbd5e1;
     }
+
+    [data-theme="light"] {
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --accent: #0284c7;
+      --green: #059669;
+      --green-hover: #047857;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --code-bg: #f1f5f9;
+      --tag-bg: #e0f2fe;
+      --sidebar-bg: #f8fafc;
+      --pane-header-bg: #e2e8f0;
+      --terminal-bg: #0f172a;
+      --stdin-bar-bg: #f1f5f9;
+      --result-box-bg: rgba(5, 150, 105, 0.08);
+      --editor-text: #0f172a;
+      --body-text-secondary: #334155;
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
@@ -38,7 +66,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0.75rem 1rem;
-      background: #111827;
+      background: var(--sidebar-bg);
       border-bottom: 1px solid var(--card-border);
       position: sticky;
       top: 0;
@@ -59,7 +87,7 @@
     aside {
       width: 340px;
       min-width: 320px;
-      background: #111827;
+      background: var(--sidebar-bg);
       border-right: 1px solid var(--card-border);
       display: flex;
       flex-direction: column;
@@ -73,10 +101,31 @@
       justify-content: space-between;
       align-items: center;
     }
+    .brand-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
     .brand h1 {
       font-size: 1.1rem;
       font-weight: 700;
       color: var(--accent);
+    }
+    .theme-toggle-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--card-border);
     }
     .close-drawer-btn {
       display: none;
@@ -123,9 +172,12 @@
     }
     .filter-chip.active {
       background: var(--accent);
-      color: #0f172a;
+      color: #ffffff;
       font-weight: 600;
       border-color: var(--accent);
+    }
+    [data-theme="light"] .filter-chip.active {
+      color: #ffffff;
     }
     .lab-list {
       list-style: none;
@@ -142,7 +194,7 @@
       gap: 4px;
     }
     .lab-item:hover, .lab-item.active {
-      background: #1e293b;
+      background: var(--card-bg);
       border-left-color: var(--accent);
     }
     .lab-item-header {
@@ -158,7 +210,7 @@
     .lab-badge {
       font-size: 0.68rem;
       background: var(--tag-bg);
-      color: #7dd3fc;
+      color: var(--accent);
       padding: 2px 6px;
       border-radius: 4px;
     }
@@ -227,7 +279,7 @@
     .algorithm-steps {
       list-style-position: inside;
       line-height: 1.7;
-      color: #cbd5e1;
+      color: var(--body-text-secondary);
       font-size: 0.88rem;
     }
     .simulator-container {
@@ -249,7 +301,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 0.5rem 0.75rem;
-      background: #131d2e;
+      background: var(--pane-header-bg);
       border-bottom: 1px solid var(--card-border);
       font-size: 0.78rem;
       color: var(--text-muted);
@@ -270,7 +322,7 @@
       background: var(--card-border);
       color: var(--text);
     }
-    .btn-secondary:hover { background: #475569; }
+    .btn-secondary:hover { opacity: 0.85; }
     .btn-run {
       background: var(--green);
       color: #ffffff;
@@ -279,11 +331,11 @@
       gap: 4px;
     }
     .btn-run:hover { background: var(--green-hover); }
-    .btn-run:disabled { background: #475569; cursor: not-allowed; }
+    .btn-run:disabled { background: var(--card-border); cursor: not-allowed; }
     #editorArea {
       flex: 1;
       background: transparent;
-      color: #e2e8f0;
+      color: var(--editor-text);
       border: none;
       outline: none;
       padding: 0.75rem;
@@ -297,7 +349,7 @@
       flex: 1;
       padding: 0.75rem;
       color: #10b981;
-      background: #06090f;
+      background: var(--terminal-bg);
       font-family: "SFMono-Regular", Consolas, Menlo, monospace;
       font-size: 0.8rem;
       overflow-y: auto;
@@ -307,7 +359,7 @@
     .stdin-container {
       border-top: 1px solid var(--card-border);
       padding: 0.5rem 0.75rem;
-      background: #111827;
+      background: var(--pane-header-bg);
       display: flex;
       flex-direction: column;
       gap: 4px;
@@ -329,39 +381,87 @@
     }
     .result-box {
       border-left: 4px solid var(--green);
-      background: rgba(16, 185, 129, 0.08);
+      background: var(--result-box-bg);
       padding: 0.75rem 1rem;
       border-radius: 0 8px 8px 0;
-      color: #cbd5e1;
+      color: var(--body-text-secondary);
       font-size: 0.88rem;
       line-height: 1.5;
       word-break: break-word;
       overflow-wrap: anywhere;
     }
-    .sandbox-toolbar {
+
+    .sandbox-container-block {
       display: none;
+      flex-direction: column;
+      width: 100%;
+    }
+    .sandbox-toolbar {
+      display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 0.6rem 0.75rem;
-      background: #131d2e;
+      background: var(--pane-header-bg);
       border: 1px solid var(--card-border);
+      border-bottom: none;
       border-radius: 8px 8px 0 0;
       gap: 8px;
+      flex-wrap: wrap;
+    }
+    .sandbox-toolbar .toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .sandbox-toolbar .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
     .sandbox-toolbar .btn {
-      padding: 6px 12px;
-      font-size: 0.75rem;
+      padding: 6px 11px;
+      font-size: 0.74rem;
     }
+
+    .sandbox-stdin-bar {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0.45rem 0.75rem;
+      background: var(--stdin-bar-bg);
+      border: 1px solid var(--card-border);
+      border-bottom: none;
+    }
+    .sandbox-stdin-bar label {
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 700;
+      white-space: nowrap;
+      text-transform: uppercase;
+    }
+    .sandbox-stdin-bar input {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      font-size: 0.78rem;
+      border-radius: 4px;
+      padding: 4px 8px;
+      outline: none;
+      font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    }
+    .sandbox-stdin-bar input:focus {
+      border-color: var(--accent);
+    }
+
     .sandbox-wrapper {
-      display: none;
       position: relative;
       width: 100%;
       height: 520px;
       border: 1px solid var(--card-border);
-      border-top: none;
       border-radius: 0 0 8px 8px;
       overflow: hidden;
-      background: #111827;
+      background: var(--code-bg);
       -webkit-overflow-scrolling: touch;
     }
     #sandboxFrame {
@@ -369,7 +469,36 @@
       height: 100%;
       border: none;
       display: block;
+      background: var(--code-bg);
     }
+
+    .sandbox-container-block.fullscreen-active {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: var(--bg);
+      padding: 0;
+      height: 100vh;
+      height: 100dvh;
+    }
+    .sandbox-container-block.fullscreen-active .sandbox-toolbar {
+      border-radius: 0;
+      border: none;
+      border-bottom: 1px solid var(--card-border);
+      background: var(--sidebar-bg);
+      padding: 0.75rem 1rem;
+    }
+    .sandbox-container-block.fullscreen-active .sandbox-stdin-bar {
+      border-left: none;
+      border-right: none;
+    }
+    .sandbox-container-block.fullscreen-active .sandbox-wrapper {
+      flex: 1;
+      height: calc(100% - 95px);
+      border-radius: 0;
+      border: none;
+    }
+
     .drawer-overlay {
       display: none;
       position: fixed;
@@ -378,6 +507,7 @@
       z-index: 25;
       backdrop-filter: blur(2px);
     }
+
     @media (max-width: 900px) {
       body {
         height: 100vh;
@@ -402,12 +532,12 @@
         height: 100dvh;
       }
       main { 
-        padding: 0.85rem; 
-        gap: 0.85rem; 
+        padding: 0.75rem; 
+        gap: 0.75rem; 
         padding-bottom: 5.5rem;
       }
       .section-card {
-        padding: 0.85rem;
+        padding: 0.75rem;
       }
       main > .section-card:last-child {
         margin-bottom: 2rem;
@@ -417,27 +547,30 @@
       }
       .card-header-bar .btn {
         width: 100%;
-        padding: 8px;
+        padding: 9px;
         text-align: center;
-        font-size: 0.78rem;
+        font-size: 0.8rem;
       }
       .simulator-container { 
         grid-template-columns: 1fr; 
       }
       .editor-pane, .terminal-pane { 
-        height: 330px; 
+        height: 320px; 
         min-height: unset;
       }
       .sandbox-toolbar {
-        padding: 0.5rem 0.65rem;
+        padding: 0.5rem 0.6rem;
       }
       .sandbox-toolbar .btn {
-        padding: 6px 10px;
+        padding: 6px 9px;
+        font-size: 0.72rem;
+      }
+      .sandbox-stdin-bar {
+        padding: 0.4rem 0.6rem;
       }
       .sandbox-wrapper { 
-        height: 65vh;
-        height: 65dvh;
-        min-height: 420px;
+        height: calc(100dvh - 250px);
+        min-height: 400px;
       }
     }
   </style>
@@ -452,7 +585,10 @@
         <h1>C++ & OOPs Lab</h1>
         <small style="color: var(--text-muted); font-size: 0.72rem;">Manual & Simulator</small>
       </div>
-      <button class="close-drawer-btn" id="closeDrawerBtn" aria-label="Close Menu">✕</button>
+      <div class="brand-actions">
+        <button class="theme-toggle-btn" id="themeToggleSidebarBtn" title="Toggle Theme">☀️</button>
+        <button class="close-drawer-btn" id="closeDrawerBtn" aria-label="Close Menu">✕</button>
+      </div>
     </div>
     <div class="search-box">
       <input type="text" id="searchInput" placeholder="Search exercises..." />
@@ -473,7 +609,10 @@
       <button class="menu-toggle-btn" id="openDrawerBtn">
         <span>☰</span> <span>All Labs</span>
       </button>
-      <span id="mobileExBadge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Ex: 1</span>
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span id="mobileExBadge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Ex: 1</span>
+        <button class="theme-toggle-btn" id="themeToggleMobileBtn" title="Toggle Theme">☀️</button>
+      </div>
     </div>
 
     <main id="contentArea">
@@ -484,7 +623,7 @@
 
       <div class="section-card">
         <div class="section-title">🎯 Aim</div>
-        <p id="detailAim" style="line-height: 1.5; color: #cbd5e1; font-size: 0.88rem; margin-top: 0.35rem;"></p>
+        <p id="detailAim" style="line-height: 1.5; color: var(--body-text-secondary); font-size: 0.88rem; margin-top: 0.35rem;"></p>
       </div>
 
       <div class="section-card">
@@ -519,21 +658,31 @@
           </div>
         </div>
 
-        <div class="sandbox-toolbar" id="sandboxToolbar">
-          <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Sandbox C++ Engine</span>
-          <div style="display: flex; gap: 6px;">
-            <button class="btn btn-secondary" id="sandboxResetBtn">Reset</button>
-            <button class="btn btn-run" id="sandboxRunBtn">▶ Run</button>
+        <div class="sandbox-container-block" id="sandboxContainerBlock">
+          <div class="sandbox-toolbar" id="sandboxToolbar">
+            <div class="toolbar-left">
+              <span style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Sandbox IDE</span>
+            </div>
+            <div class="toolbar-right">
+              <button class="btn btn-secondary" id="sandboxFullscreenBtn" title="Toggle Fullscreen">⛶ Fullscreen</button>
+              <button class="btn btn-secondary" id="sandboxResetBtn">Reset</button>
+              <button class="btn btn-run" id="sandboxRunBtn">▶ Run</button>
+            </div>
           </div>
-        </div>
 
-        <div class="sandbox-wrapper" id="sandboxWrapper">
-          <iframe 
-            id="sandboxFrame" 
-            src="about:blank"
-            allow="clipboard-write; clipboard-read"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
-          </iframe>
+          <div class="sandbox-stdin-bar">
+            <label for="sandboxStdinInput">cin / STDIN:</label>
+            <input type="text" id="sandboxStdinInput" placeholder="Enter input for cin (e.g. 10 20)" />
+          </div>
+
+          <div class="sandbox-wrapper" id="sandboxWrapper">
+            <iframe 
+              id="sandboxFrame" 
+              src="about:blank"
+              allow="clipboard-write; clipboard-read"
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-modals">
+            </iframe>
+          </div>
         </div>
       </div>
 
@@ -1368,6 +1517,7 @@ public:
         sportsScore = 90;
     }
 };
+// Result inherits from Test and Sports
 class Result : public Test, public Sports
 {
 public:
@@ -2048,6 +2198,7 @@ int main()
 
     let currentCategory = "all";
     let currentIdx = 0;
+    let currentTheme = localStorage.getItem("app_theme") || "dark";
 
     const labList = document.getElementById("labList");
     const searchInput = document.getElementById("searchInput");
@@ -2059,16 +2210,40 @@ int main()
     const runBtn = document.getElementById("runCodeBtn");
     const toggleSandboxBtn = document.getElementById("toggleSandboxBtn");
     const sandboxFrame = document.getElementById("sandboxFrame");
-    const sandboxWrapper = document.getElementById("sandboxWrapper");
-    const sandboxToolbar = document.getElementById("sandboxToolbar");
+    const sandboxContainerBlock = document.getElementById("sandboxContainerBlock");
     const sandboxRunBtn = document.getElementById("sandboxRunBtn");
     const sandboxResetBtn = document.getElementById("sandboxResetBtn");
+    const sandboxStdinInput = document.getElementById("sandboxStdinInput");
+    const sandboxFullscreenBtn = document.getElementById("sandboxFullscreenBtn");
     const apiSimulator = document.getElementById("apiSimulator");
     const sidebarDrawer = document.getElementById("sidebarDrawer");
     const drawerOverlay = document.getElementById("drawerOverlay");
     const openDrawerBtn = document.getElementById("openDrawerBtn");
     const closeDrawerBtn = document.getElementById("closeDrawerBtn");
     const mobileExBadge = document.getElementById("mobileExBadge");
+    const themeToggleSidebarBtn = document.getElementById("themeToggleSidebarBtn");
+    const themeToggleMobileBtn = document.getElementById("themeToggleMobileBtn");
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("app_theme", theme);
+      const icon = theme === "dark" ? "☀️" : "🌙";
+      themeToggleSidebarBtn.innerText = icon;
+      themeToggleMobileBtn.innerText = icon;
+      
+      if (sandboxContainerBlock.style.display === "flex") {
+        loadSandboxWithCode();
+      }
+    }
+
+    function toggleTheme() {
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      applyTheme(nextTheme);
+    }
+
+    themeToggleSidebarBtn.addEventListener("click", toggleTheme);
+    themeToggleMobileBtn.addEventListener("click", toggleTheme);
 
     function openSidebar() {
       sidebarDrawer.classList.add("open");
@@ -2109,8 +2284,9 @@ int main()
       });
     }
 
-    function syncCodeToSandbox(code) {
+    function syncCodeToSandbox(code, inputVal) {
       if (sandboxFrame.contentWindow) {
+        const stdinData = typeof inputVal !== "undefined" ? inputVal : sandboxStdinInput.value;
         sandboxFrame.contentWindow.postMessage({
           eventType: 'populateCode',
           language: 'cpp',
@@ -2119,22 +2295,24 @@ int main()
               name: 'main.cpp',
               content: code
             }
-          ]
+          ],
+          stdin: stdinData
         }, '*');
       }
     }
 
     function loadSandboxWithCode() {
       const currentCode = editorArea.value || exercises[currentIdx].code;
-      const targetSrc = "https://onecompiler.com/embed/cpp?listenToEvents=true&hideNew=true&hideTitle=true&hideLanguageSelection=true";
+      const currentStdin = sandboxStdinInput.value || exercises[currentIdx].defaultStdin || "";
+      const targetSrc = `https://onecompiler.com/embed/cpp?listenToEvents=true&hideNew=true&hideTitle=true&hideLanguageSelection=true&hideStdin=false&theme=${currentTheme}`;
       
-      if (!sandboxFrame.src || sandboxFrame.src === "about:blank" || !sandboxFrame.src.includes("onecompiler.com")) {
+      if (!sandboxFrame.src || sandboxFrame.src === "about:blank" || !sandboxFrame.src.includes(`theme=${currentTheme}`)) {
         sandboxFrame.src = targetSrc;
         sandboxFrame.onload = () => {
-          setTimeout(() => syncCodeToSandbox(currentCode), 500);
+          setTimeout(() => syncCodeToSandbox(currentCode, currentStdin), 600);
         };
       } else {
-        syncCodeToSandbox(currentCode);
+        syncCodeToSandbox(currentCode, currentStdin);
       }
     }
 
@@ -2156,17 +2334,26 @@ int main()
 
       editorArea.value = ex.code;
       stdinInput.value = ex.defaultStdin || "";
+      sandboxStdinInput.value = ex.defaultStdin || "";
       terminalOutput.innerText = `Program loaded. Tap "▶ Run" to execute.`;
       execStatus.innerText = "GCC 9.2";
       execStatus.style.color = "var(--text-muted)";
       document.getElementById("detailResult").innerText = ex.result;
 
-      if (sandboxWrapper.style.display === "block") {
-        syncCodeToSandbox(ex.code);
+      if (sandboxContainerBlock.style.display === "flex") {
+        syncCodeToSandbox(ex.code, ex.defaultStdin || "");
       }
 
       renderList();
     }
+
+    stdinInput.addEventListener("input", () => {
+      sandboxStdinInput.value = stdinInput.value;
+    });
+    sandboxStdinInput.addEventListener("input", () => {
+      stdinInput.value = sandboxStdinInput.value;
+      syncCodeToSandbox(editorArea.value || exercises[currentIdx].code, sandboxStdinInput.value);
+    });
 
     async function executeCppCode() {
       const sourceCode = editorArea.value;
@@ -2215,15 +2402,14 @@ int main()
     }
 
     toggleSandboxBtn.addEventListener("click", () => {
-      const isSandboxActive = sandboxWrapper.style.display === "block";
+      const isSandboxActive = sandboxContainerBlock.style.display === "flex";
       if (isSandboxActive) {
-        sandboxWrapper.style.display = "none";
-        sandboxToolbar.style.display = "none";
+        sandboxContainerBlock.style.display = "none";
+        sandboxContainerBlock.classList.remove("fullscreen-active");
         apiSimulator.style.display = window.innerWidth <= 900 ? "flex" : "grid";
         toggleSandboxBtn.innerText = "Switch to Sandbox View";
       } else {
-        sandboxWrapper.style.display = "block";
-        sandboxToolbar.style.display = "flex";
+        sandboxContainerBlock.style.display = "flex";
         apiSimulator.style.display = "none";
         toggleSandboxBtn.innerText = "Switch to Terminal View";
         loadSandboxWithCode();
@@ -2235,6 +2421,7 @@ int main()
     document.getElementById("resetCodeBtn").addEventListener("click", () => {
       editorArea.value = exercises[currentIdx].code;
       stdinInput.value = exercises[currentIdx].defaultStdin || "";
+      sandboxStdinInput.value = exercises[currentIdx].defaultStdin || "";
     });
 
     document.getElementById("copyCodeBtn").addEventListener("click", () => {
@@ -2247,23 +2434,33 @@ int main()
 
     sandboxRunBtn.addEventListener("click", () => {
       if (sandboxFrame.contentWindow) {
-        sandboxFrame.contentWindow.postMessage({ eventType: 'triggerRun' }, '*');
-        sandboxFrame.contentWindow.postMessage({ eventType: 'run' }, '*');
+        syncCodeToSandbox(editorArea.value || exercises[currentIdx].code, sandboxStdinInput.value);
+        setTimeout(() => {
+          sandboxFrame.contentWindow.postMessage({ eventType: 'triggerRun' }, '*');
+          sandboxFrame.contentWindow.postMessage({ eventType: 'run' }, '*');
+        }, 150);
       }
-      const origText = sandboxRunBtn.innerHTML;
+      const orig = sandboxRunBtn.innerHTML;
       sandboxRunBtn.innerHTML = "▶ Running...";
       setTimeout(() => {
-        sandboxRunBtn.innerHTML = origText;
+        sandboxRunBtn.innerHTML = orig;
       }, 1500);
     });
 
     sandboxResetBtn.addEventListener("click", () => {
-      syncCodeToSandbox(exercises[currentIdx].code);
-      const origText = sandboxResetBtn.innerText;
+      sandboxStdinInput.value = exercises[currentIdx].defaultStdin || "";
+      stdinInput.value = exercises[currentIdx].defaultStdin || "";
+      syncCodeToSandbox(exercises[currentIdx].code, exercises[currentIdx].defaultStdin || "");
+      const orig = sandboxResetBtn.innerText;
       sandboxResetBtn.innerText = "Reset!";
       setTimeout(() => {
-        sandboxResetBtn.innerText = origText;
+        sandboxResetBtn.innerText = orig;
       }, 1200);
+    });
+
+    sandboxFullscreenBtn.addEventListener("click", () => {
+      const isFull = sandboxContainerBlock.classList.toggle("fullscreen-active");
+      sandboxFullscreenBtn.innerText = isFull ? "✕ Exit Fullscreen" : "⛶ Fullscreen";
     });
 
     chips.forEach(chip => {
@@ -2276,6 +2473,7 @@ int main()
     });
 
     searchInput.addEventListener("input", renderList);
+    applyTheme(currentTheme);
     selectExercise(0);
   </script>
 </body>
